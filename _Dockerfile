@@ -23,7 +23,6 @@ RUN apt-get update -qq && \
     apt-get install -y nodejs && \
     npm install --global yarn@"$YARN_VERSION" && \
     gem update --no-document && gem install -N bundler
-RUN yarn add esbuild-linux-arm64 --dev
 
 # Start a new stage for building the application
 FROM base as build
