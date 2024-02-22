@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "common", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "creator", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "creator", "data-turbo-track": "reload", defer: true %>
+    <!--<link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">-->
+    <%= favicon_link_tag asset_path('face/favicon.ico') %>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

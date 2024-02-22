@@ -1,0 +1,29 @@
+# Sidekiq Cron schedule
+
+pre_warm_products_job:
+  name: 'Pre-warm Discover Products - every 1h'
+  cron: '0 * * * *'
+  class: 'PreWarmDiscoverProductsJob'
+  queue: 'default'
+  description: 'This job pre-warms product caches.'
+
+pre_warm_categories_job:
+  name: 'Pre-warm Discover Categories - every 1h'
+  cron: '0 * * * *'
+  class: 'PreWarmDiscoverCategoriesJob'
+  queue: 'default'
+  description: 'This job pre-warms category caches.'
+
+pre_warm_tags_job:
+  name: 'Pre-warm Discover Tags - every 1h'
+  cron: '0 * * * *'
+  class: 'PreWarmDiscoverTagsJob'
+  queue: 'default'
+  description: 'This job pre-warms tags caches.'
+
+calculate_category_stats_job:
+  name: 'Pre-warm Discover Categories - every 1d'
+  cron: '0 0 * * *'
+  class: 'CalculateCategoryStatsJob'
+  queue: 'default'
+  description: 'This job counts category statistics.'

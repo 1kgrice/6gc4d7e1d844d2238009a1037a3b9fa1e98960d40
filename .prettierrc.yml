@@ -1,0 +1,13 @@
+printWidth: 100
+tabWidth: 2
+semi: false
+singleQuote: true
+trailingComma: 'none'
+
+rubyArrayLiteral: false
+rubyHashLabel: false
+rubyModifier: false
+rubySingleQuote: true
+rubyToProc: true
+
+plugins: ["@prettier/plugin-ruby"]

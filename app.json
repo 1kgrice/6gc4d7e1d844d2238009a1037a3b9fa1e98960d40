@@ -1,0 +1,20 @@
+{
+  "healthchecks": {
+    "web": [
+      {
+        "type": "startup",
+        "name": "web check",
+        "description": "Checking if the app responds to /check.txt endpoint",
+        "path": "/check.txt",
+        "attempts": 5,
+        "timeout": 5,
+        "wait": 8
+      }
+    ]
+  },
+  "scripts": {
+    "dokku": {
+      "post": "yarn build:css"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+json.id media.external_id
+json.url media.url
+json.original_url media.original_url
+json.thumbnail media.thumbnail
+json.type media.media_type
+json.filetype media.filetype
+json.width media.width
+json.height media.height
+json.native_width media.native_width
+json.native_height media.native_height

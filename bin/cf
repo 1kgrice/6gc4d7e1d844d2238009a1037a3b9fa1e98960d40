@@ -1,0 +1,79 @@
+#!/bin/bash
+# Cloudflare ease-of-life scripts
+
+# Usage:
+# bin/cf routes list - list all defined routes
+# bin/cf maintenance on - turn maintenance mode on (redirect http request to mainenance page)
+# bin/cf maintenance off - turn maintenance mode off
+# bin/cf token check - verify bearer token
+
+# Cloudflare API: https://developers.cloudflare.com/api/operations/worker-routes-list-routes
+
+
+
+if [ "$#" -eq "0" ]
+    then
+        echo "No arguments supplied"
+    else        
+        #domain zone id
+        ZONE='f11d6aab548c8776b7291af8b82e0f8e'
+
+        #bearer token: valid until Dec 31 2025
+        BEARER='lD4BRQ-AbVE3rVQF2dV9MnAQilKDm5AJK5iuxJ82'
+
+        #maintenance route (routes to catch when maintenance mode is on)
+        MAINTENANCE_PATTERN='taskwave.io/*'
+
+        #placeholder route (using an irrelevant route insead of deleting the record)
+        PLACEHOLDER_PATTERN='taskwave.io/maintenance'
+
+        #script-name (name of the worker in Cloudflare)
+        SCRIPT_NAME='taskwave-maintenance-mode'
+
+        #maintenance route, the only existing route in routes list at the moment (hardcoded)
+
+        # TODO: replace with pattern recognition
+        CURRENT_ROUTE_ID='112f06e75ef742e592a092e4704ac27e'
+        
+
+        if [[ "$1" == 'routes' && "$2" == 'list' ]]; then
+            #list routes
+            echo 'Listing exisiting routes'
+            curl -H "Authorization: Bearer ${BEARER}" --request GET \
+            --url https://api.cloudflare.com/client/v4/zones/${ZONE}/workers/routes \
+            --header 'Content-Type: application/json' \
+            --header 'X-Auth-Email: '
+        elif [[ "$1" == 'maintenance' && "$2" == 'on' ]]; then
+            #modify maintenance route (ON)
+            echo 'Turning maintenance mode ON'
+            curl -H "Authorization: Bearer ${BEARER}" \
+            --request PUT \
+            --url https://api.cloudflare.com/client/v4/zones/f11d6aab548c8776b7291af8b82e0f8e/workers/routes/${CURRENT_ROUTE_ID} \
+            --header 'Content-Type: application/json' \
+            --header 'X-Auth-Email: ' \
+            --data '{
+            "pattern": "taskwave.io/*",
+            "script": "taskwave-maintenance-mode"
+            }'
+        elif [[ "$1" == 'maintenance' && "$2" == 'off' ]]; then
+            #modify maintenance route (OFF)
+            echo 'Turning maintenance mode OFF'
+            curl -H "Authorization: Bearer ${BEARER}" \
+            --request PUT \
+            --url https://api.cloudflare.com/client/v4/zones/f11d6aab548c8776b7291af8b82e0f8e/workers/routes/${CURRENT_ROUTE_ID} \
+            --header 'Content-Type: application/json' \
+            --header 'X-Auth-Email: ' \
+            --data '{
+            "pattern": "taskwave.io/maintenance",
+            "script": "taskwave-maintenance-mode"
+            }'
+        elif [[ "$1" == 'token' && "$2" == 'check' ]]; then
+            #verify token
+            echo 'Verifying bearer token'
+            curl -X GET "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+            -H "Authorization: Bearer ${BEARER}" \
+            -H "Content-Type:application/json"
+        else
+            echo "Invalid argument"
+        fi
+fi

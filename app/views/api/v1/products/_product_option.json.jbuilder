@@ -1,0 +1,5 @@
+json.name product_option.name
+json.quantity_left product_option.quantity_left
+json.description product_option.description
+json.price_difference_cents product_option.price_difference_cents
+json.is_pwyw product_option.is_pwyw

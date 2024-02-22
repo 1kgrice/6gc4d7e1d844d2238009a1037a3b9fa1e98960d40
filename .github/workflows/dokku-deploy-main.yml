@@ -1,0 +1,113 @@
+---
+name: 'Production deployment'
+
+# yamllint disable-line rule:truthy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cancel_previous_runs:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ secrets.GITHUB_TOKEN }}
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - id: clone-repo
+        name: Cloning repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - id: slack-pre-deploy
+        name: Post to a Slack channel (pre-deploy)
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
+          channel-id: 'development'
+          # For posting a simple plain text message
+          # slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+
+          # Payload builder (Slack Block Kit):
+          # https://app.slack.com/block-kit-builder
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "New activity: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|gumtective (${{ github.sha }})>"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "🟡 Production deploy in progress\n *Commit*: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }} #OAuth Access Token from the slack app settings
+
+      - id: push-to-dokku
+        name: Push to dokku
+        uses: dokku/github-action@v1.4.0
+        with:
+          branch: 'main'
+          git_remote_url: ${{ secrets.DOKKU_GIT_REMOTE_PROD }} #ssh://dokku@<ip>:<port>/home/dokku/<app-name>
+          ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }} #private key with access to dokku server
+
+      - id: slack-post-deploy-success
+        name: Post to a Slack channel (post-deploy)
+        uses: slackapi/slack-github-action@v1.24.0
+        #if: ${{ always() && contains(needs.*.result, 'failure') }} # execute any of previous steps failed
+        if: always() #execule always
+        with:
+          # Slack channel id, channel name, or user id to post message.
+          # See also: https://api.slack.com/methods/chat.postMessage#channels
+          # You can pass in multiple channels to post to by providing a comma-delimited list of channel IDs.
+          channel-id: 'development' #for notification messages
+          # update-ts: ${{ steps.slack.outputs.ts }}
+          # For posting a simple plain text message
+          # slack-message: "GitHub build result: ${{ job.status }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+
+          # Payload builder (Slack Block Kit):
+          # https://app.slack.com/block-kit-builder
+          payload: |
+            {
+              "blocks": [
+                  {
+                      "type": "context",
+                      "elements": [
+                          {
+                              "type": "mrkdwn",
+                              "text": "New activity: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|gumtective (${{ github.sha }})>"
+                          }
+                      ]
+                  },
+                  { 
+                      "type": "section",
+                      "text": {
+                          "type": "mrkdwn",
+                          "text": "${{ job.status == 'success' && '🟢' || '🔴' }} Production deploy ${{ job.status }}\nCommit: ${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                      }
+                  } 
+              ]
+            }
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }} #OAuth Access Token from the slack app settings
+          slack-channel-id: 'development' #for notification messages

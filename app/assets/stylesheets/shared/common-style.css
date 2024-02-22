@@ -1,0 +1,23 @@
+/* Theme variables: Light */
+.lightTheme {
+  --body-bg: #f4f4f0;
+  --primary: 0 0 0;
+  --contrast-primary: 255 255 255;
+  --color: 0 0 0;
+  --filled: 255 255 255;
+  --contrast-filled: 0 0 0;
+  --contrast-secondary: 255 255 255;
+  --border-alpha: 1;
+}
+
+/* Theme variables: Dark */
+.darkTheme {
+  --body-bg: #242423;
+  --primary: 221 221 221;
+  --contrast-primary: 0 0 0;
+  --color: 221 221 221;
+  --filled: 0 0 0;
+  --contrast-filled: 221 221 221;
+  --contrast-secondary: 221 221 221;
+  --border-alpha: 0.35
+}

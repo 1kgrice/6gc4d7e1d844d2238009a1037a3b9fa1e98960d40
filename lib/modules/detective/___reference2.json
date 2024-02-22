@@ -1,0 +1,67 @@
+{
+  "product": {
+    "name": "I Can Kill the Dragon Akashic Field",
+    "seller": {
+      "id": "6688412544681",
+      "name": "Waslerr Fields",
+      "profile_url": "https://waslerr.gumroad.com/?recommended_by=search",
+      "avatar_url": "https://public-files.gumroad.com/o6dumubp0ydd4se13zll7x5afk2j"
+    },
+    "covers": [
+      {
+        "url": "https://public-files.gumroad.com/56pajv3wz32s9soekbv2rz7yuvmw",
+        "original_url": "https://public-files.gumroad.com/w0u045mjhff11udu69y155d8n0hu",
+        "thumbnail": null,
+        "id": "e03c41a1cf70e1acfa63b684e612eacd",
+        "type": "image",
+        "filetype": "png",
+        "width": 670,
+        "height": 668,
+        "native_width": 1262,
+        "native_height": 1260
+      }
+    ],
+    "main_cover_id": "e03c41a1cf70e1acfa63b684e612eacd",
+    "thumbnail_url": null,
+    "quantity_remaining": null,
+    "currency_code": "usd",
+    "long_url": "https://waslerr.gumroad.com/l/ysyot",
+    "is_sales_limited": false,
+    "price_cents": 0,
+    "rental_price_cents": null,
+    "pwyw": { "suggested_price_cents": 2100 },
+    "rating_counts": [0, 0, 0, 1, 9],
+    "is_legacy_subscription": false,
+    "is_tiered_membership": false,
+    "is_physical": false,
+    "custom_view_content_button_text": null,
+    "custom_button_text_option": "i_want_this_prompt",
+    "is_multiseat_license": false,
+    "permalink": "ysyot",
+    "preorder": null,
+    "description_html": "\u003cp\u003eThis Akashic Field , as its name implies, is a powerful audio designed to instantly infuse you with positivity, happiness, and excitement. This instant energy boost goes beyond merely lifting your spirits; it recharges your inner being, making you feel invigorated and enthusiastic.\u003c/p\u003e\u003cp\u003eAs you engage with this audio field, you'll experience a profound sense of empowerment within your mind, as if you possess the strength to conquer any obstacle, even a metaphorical dragon. It's not about physical powers but about the strength of your mind and spirit.\u003c/p\u003e\u003cp\u003eThis remarkable field is here to uplift your mood, boost your energy levels, and instill a deep sense of self-confidence. With it, you can tap into a wellspring of mental and emotional strength, ready to face life's challenges with unwavering determination. Let the Akashic Field propel you into a state of positivity, happiness, and boundless energy, as you embrace the belief that you can triumph over any dragon that life may throw your way.\u003c/p\u003e\u003cp\u003eUse it whenever you feel so.\u003c/p\u003e",
+    "is_compliance_blocked": false,
+    "is_published": true,
+    "duration_in_months": null,
+    "rental": null,
+    "is_stream_only": false,
+    "is_quantity_enabled": false,
+    "sales_count": null,
+    "free_trial": null,
+    "summary": null,
+    "attributes": [
+      { "name": "Size", "value": "10.6 MB" },
+      { "name": "Duration", "value": "4:38" }
+    ],
+    "recurrences": null,
+    "options": [],
+    "analytics": { "google_analytics_id": null, "facebook_pixel_id": null, "free_sales": true },
+    "has_third_party_analytics": false,
+    "ppp_details": null,
+    "can_edit": false,
+    "refund_policy": null,
+    "bundle_products": []
+  },
+  "discount_code": null,
+  "purchase": null
+}

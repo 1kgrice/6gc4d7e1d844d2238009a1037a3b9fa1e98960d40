@@ -1,0 +1,68 @@
+# syntax = docker/dockerfile:1
+
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
+ARG RUBY_VERSION=3.2.2
+FROM ruby:$RUBY_VERSION-slim as base
+
+# Rails app lives here
+WORKDIR /rails
+
+ARG RAILS_MASTER_KEY
+
+# Set environment
+ENV RAILS_ENV="development" \
+    REDIS_URL="redis://cache:6379/0" \
+    PORT="3000" \
+    API_HOST="http://localhost:3000"
+
+# Install Node.js, Yarn and other dependencies needed across all stages
+ARG YARN_VERSION=1.22.19
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential curl libpq-dev node-gyp pkg-config python-is-python3 && \
+    curl -sL https://deb.nodesource.com/setup_20.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install --global yarn@"$YARN_VERSION" && \
+    gem update --no-document && gem install -N bundler
+RUN yarn add esbuild-linux-arm64 --dev
+
+# Start a new stage for building the application
+FROM base as build
+
+# Install application dependencies
+RUN mkdir -p /home/rails/.yarn-cache && chown -R $(id -u):$(id -g) /home/rails
+COPY Gemfile Gemfile.lock package.json yarn.lock .yarnrc.yml ./
+RUN bundle install && \
+    yarn install --frozen-lockfile --cache-folder /home/rails/.yarn-cache
+
+# Copy application code and precompile assets, etc.
+COPY . .
+RUN bundle exec bootsnap precompile --gemfile && \
+    if [[ "$RAILS_ENV" == "production" ]]; then \
+      mv config/credentials.yml.enc config/credentials.yml.enc.backup; \
+      mv config/credentials.yml.enc.sample config/credentials.yml.enc; \
+      mv config/master.key.sample config/master.key; \
+      bundle exec rails assets:precompile; \
+      mv config/credentials.yml.enc.backup config/credentials.yml.enc; \
+      rm config/master.key; \
+    fi
+
+# Final stage for app image, using the same base as the build stage
+FROM base
+
+# Install runtime dependencies only
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl libjemalloc2 postgresql-client && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Copy built artifacts from the build stage
+COPY --from=build /rails /rails
+COPY --from=build /usr/local/bundle /usr/local/bundle
+
+# Prepare for non-root user
+RUN useradd rails --create-home --shell /bin/bash && chown -R rails:rails db log storage tmp
+USER rails:rails
+
+# Set entrypoint and default command
+ENTRYPOINT ["/rails/bin/docker-entrypoint"]
+EXPOSE 3000
+CMD ["./bin/rails", "server"]

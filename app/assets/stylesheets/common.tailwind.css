@@ -1,0 +1,18 @@
+/* Stylesheet for Landing module */
+
+/* Tailwind modules */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Local styles */
+@import 'fonts/mabry-pro.scss';
+
+/* Imported from Gumroad */
+/* Taken as is for quick prototyping purposes. Has plenty of definitions that aren't needed in this project.  */
+@import 'external/discover.design.css';
+
+@import 'shared/common-style.css';
+
+/* Default component loader styling */
+@import 'react-loading-skeleton/dist/skeleton.css';

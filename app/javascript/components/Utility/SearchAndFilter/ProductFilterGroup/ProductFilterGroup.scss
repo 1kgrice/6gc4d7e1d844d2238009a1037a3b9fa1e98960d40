@@ -1,0 +1,18 @@
+.animate-height {
+  transition: height 0.2s ease-out;
+}
+[type="radio"], [type="checkbox"] {
+  border-color: var(--accent) !important;
+}
+
+[type="radio"]:checked, [type="radio"]:checked:hover, [type="radio"]:checked:focus, [type="checkbox"]:checked, [type="checkbox"]:checked:hover, [type="checkbox"]:checked:focus {
+  background-image: none !important;
+}
+
+[type="checkbox"]:checked:hover,
+[type="checkbox"]:checked:focus,
+[type="radio"]:checked:hover,
+[type="radio"]:checked:focus {
+  // border-color: var(--accent) !important; 
+  background-color: var(--pink) !important;
+}

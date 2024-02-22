@@ -1,0 +1,42 @@
+.footer-gum-icon {
+  width: 32px;
+  height: 32px;
+  margin-right: 1rem;
+}
+
+.flex-vertical {
+  align-items: center;
+  display: flex;
+}
+
+.footer-social-icon-grid {
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
+}
+
+.social-link {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--white);
+  transition: background-color .2s ease-in-out;
+}
+
+.social-link:hover {
+  color: var(--pink);
+}
+
+.w-inline-block {
+  max-width: 100%;
+  display: inline-block;
+}
+
+.w-embed:before, .w-embed:after {
+  content: " ";
+  grid-area: 1 / 1 / 2 / 2;
+  display: table;
+}
+
+.w-embed:after {
+  clear: both;
+}

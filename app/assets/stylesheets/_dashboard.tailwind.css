@@ -1,0 +1,9 @@
+/* Stylesheet for Landing module */
+
+/* Tailwind modules */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Imported from Gumroad */
+/* @import 'external/gumroad.webflow.css'; */

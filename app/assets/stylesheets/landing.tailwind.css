@@ -1,0 +1,23 @@
+/* Stylesheet for Landing module */
+
+/* Tailwind modules */
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'tailwindcss/variants';
+
+/* Local styles */
+@import 'fonts/mabry-pro.scss';
+
+/* Imported from Gumroad */
+/* Taken as is for quick prototyping purposes. Has plenty of definitions that aren't needed in this project. Ideally should be fully replaced with local styles. Some components in app/javascript/pages/landing rely on this at the moment. */
+@import 'external/gumroad.webflow.css';
+
+/* Shared slice of gumroad.webflow.css containing only the styles that are actually used (incomplete) */
+/* @import 'shared/gumroad-base.css'; */
+
+/* @layer base {
+  html,body {
+    height: 100%;
+  }
+} */

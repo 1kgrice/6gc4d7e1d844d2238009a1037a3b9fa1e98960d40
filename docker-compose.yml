@@ -1,0 +1,85 @@
+version: '3.8'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: _Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:password@db:5432/gumtective_development
+      REDIS_URL: redis://cache:6379/0
+      API_HOST: http://localhost:3000
+    depends_on:
+      - db
+      - cache
+    volumes:
+      - .:/rails
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -b '0.0.0.0'"
+  
+  js:
+    build:
+      context: .
+      dockerfile: _Dockerfile
+    command: yarn build --watch
+    volumes:
+      - .:/rails
+
+  css:
+    build:
+      context: .
+      dockerfile: _Dockerfile
+    command: yarn build:css:dev
+    volumes:
+      - .:/rails
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: _Dockerfile
+    command: bundle exec sidekiq -C config/sidekiq.yml
+    depends_on:
+      - db
+      - cache
+    volumes:
+      - .:/rails
+    environment:
+      RAILS_ENV: development
+      DATABASE_URL: postgres://postgres:password@db:5432/gumtective_development
+      REDIS_URL: redis://cache:6379/0
+      API_HOST: http://localhost:3000
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gumtective_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  cache:
+    image: redis:latest
+    volumes:
+      - redis_data:/data
+
+  test:
+    build:
+      context: .
+      dockerfile: _Dockerfile
+    environment:
+      RAILS_ENV: test
+      DATABASE_URL: postgres://postgres:password@db:5432/gumtective_test
+      REDIS_URL: redis://cache:6379/1 
+    command: bash -c "RAILS_ENV=test bundle exec rake db:create db:schema:load && bundle exec rspec"
+    volumes:
+      - .:/rails
+    depends_on:
+      - db
+    profiles:
+      - test
+
+volumes:
+  postgres_data:
+  redis_data:

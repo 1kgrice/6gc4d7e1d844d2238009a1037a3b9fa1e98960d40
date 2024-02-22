@@ -1,0 +1,5 @@
+web:  bin/rails server -p ${PORT:-3000}
+worker: redis-server
+worker: bundle exec sidekiq -C config/sidekiq.yml
+js: yarn build --watch
+css: yarn build:css:dev
