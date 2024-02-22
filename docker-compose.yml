@@ -25,6 +25,7 @@ services:
     command: yarn build --watch
     volumes:
       - .:/rails
+      - /rails/node_modules
 
   css:
     build:
@@ -33,6 +34,7 @@ services:
     command: yarn build:css:dev
     volumes:
       - .:/rails
+      - /rails/node_modules
 
   sidekiq:
     build:
