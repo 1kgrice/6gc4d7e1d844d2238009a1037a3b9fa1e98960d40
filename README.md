@@ -19,7 +19,7 @@ A docker-compose.yml file is included for demonstration purposes, allowing to sp
 Download the code
 
 ```bash
-git clone git@github.com:1kgrice/6gc4d7e1d844d2238009a1037a3b9fa1e98960d40.git gumtective-demo
+git clone https://github.com/1kgrice/6gc4d7e1d844d2238009a1037a3b9fa1e98960d40.git gumtective-demo
 cd gumtective-demo
 ```
 
@@ -51,7 +51,7 @@ Generate tag associations for products
 docker-compose run web rake data:tags:rebuild
 ```
 
-For the sake of efficiency, only a small subset of the data is included with the seeds. The actual app in production lists around 250,000 products and has been optimized accordingly.
+For the sake of efficiency, only a small subset of the data is included with the seeds. The actual app in production lists around 250,000 products from Gumroad creators and has been optimized accordingly.
 
 Visit <http://localhost:3000> to access the local app.
 
@@ -99,4 +99,5 @@ This repository reflects the development state of the project. As such, it may c
 ## Contact
 
 Kirill Ragozin
+
 [ragozin@hey.com](mailto:ragozin@hey.com)
