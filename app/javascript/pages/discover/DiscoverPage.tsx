@@ -200,7 +200,7 @@ export default function DiscoverPage() {
   }
 
   const fetchMoreDiscoverProducts = async () => {
-    if (discoverProducts.length < 9) {
+    if (discoverProducts.length < 9 && discoverableTotal > 9) {
       return
     }
     const longSlug = location.pathname.replace(/^\//, '')
