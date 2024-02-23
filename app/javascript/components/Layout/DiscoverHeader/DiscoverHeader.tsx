@@ -18,10 +18,17 @@ interface IDiscoverHeader {
   showNav?: boolean
   absoluteUrl?: boolean
   creatorMode?: boolean
-  creator?: Creator
+  creator?: Creator | null
+  navigationCallback?: () => void
 }
 
-const DiscoverHeader = ({ showNav = true, absoluteUrl, creatorMode, creator }: IDiscoverHeader) => {
+const DiscoverHeader = ({
+  showNav = true,
+  absoluteUrl,
+  creatorMode,
+  creator,
+  navigationCallback = () => {}
+}: IDiscoverHeader) => {
   const [category, setCategory] = useState<Category | null>(null)
   const { colorTheme } = useTheme()
   const params = useParams()
@@ -29,7 +36,7 @@ const DiscoverHeader = ({ showNav = true, absoluteUrl, creatorMode, creator }: I
   const [isPopupOpen, setIsPopupOpen] = useState(false)
 
   const [randomProduct, setRandomProduct] = useState<Product | null>(null)
-  const [loadingRandomProduct, setLoadingRandomProduct] = useState<boolean>(false)
+  const [_, setLoadingRandomProduct] = useState<boolean>(false)
 
   useEffect(() => {
     new Image().src = gumtectiveWhite
@@ -114,6 +121,7 @@ const DiscoverHeader = ({ showNav = true, absoluteUrl, creatorMode, creator }: I
 
   const navigateToRandomProduct = async () => {
     if (randomProduct) {
+      navigationCallback()
       window.location.href = adjustProductUrlBasedOnCurrentPageContext(randomProduct.url)
     } else {
       const product = await fetchRandomProduct()
@@ -124,9 +132,11 @@ const DiscoverHeader = ({ showNav = true, absoluteUrl, creatorMode, creator }: I
   }
 
   const [headerLogo, accentColor] = useMemo(() => {
-    const accent =
-      category?.accentColor ||
-      category?.ancestors?.find((ancestor) => ancestor.accentColor)?.accentColor
+    const accentColorFromCategory = category?.accentColor
+    const accentColorFromAncestors = category?.ancestors?.find(
+      (ancestor) => ancestor.accentColor
+    )?.accentColor
+    const accent = accentColorFromCategory || accentColorFromAncestors
     const headerImage = colorTheme === 'dark' ? gumtectiveWhite : gumtectiveBlack
     return [accent ? gumtectiveBlack : headerImage, accent || null]
   }, [category, colorTheme, params])
@@ -135,66 +145,65 @@ const DiscoverHeader = ({ showNav = true, absoluteUrl, creatorMode, creator }: I
     <Fragment>
       <header className={clsx(accentColor && `bg-${accentColor} text-black`, 'hero')}>
         <>
-          {creatorMode && creator ? (
-            <>
-              <section>
-                <Link to="/" style={{ textDecoration: 'none' }}>
-                  <Img
-                    className="user-avatar"
-                    src={[creator.avatarUrl, gCircleAltPink]}
-                    alt="Profile Picture"
-                    loader={
-                      <SkeletonContainer className="rounded-full overflow-hidden">
-                        <Skeleton height={36} width={36} />
-                      </SkeletonContainer>
-                    }
-                  />
-                </Link>
-                <Link to="/" style={{ textDecoration: 'none' }}>
-                  {creator.name}
-                </Link>
-              </section>
-              <section>
-                <a href={discoverUrl} className="button primary">
-                  <span className={'icon icon-search'}></span>
-                </a>
-                <button
-                  onClick={navigateToRandomProduct}
-                  // disabled={newProductLoading}
-                  className="bg-white filled button"
-                >
-                  <span className="icon icon-button"></span>
-                </button>
-              </section>
-            </>
+          {creatorMode ? (
+            creator && (
+              <Fragment>
+                <section>
+                  <Link to="/" style={{ textDecoration: 'none' }}>
+                    <Img
+                      className="user-avatar"
+                      src={[creator.avatarUrl, gCircleAltPink]}
+                      alt="Profile Picture"
+                      loader={
+                        <SkeletonContainer className="rounded-full overflow-hidden">
+                          <Skeleton height={36} width={36} />
+                        </SkeletonContainer>
+                      }
+                    />
+                  </Link>
+                  <Link to="/" style={{ textDecoration: 'none' }}>
+                    {creator.name}
+                  </Link>
+                </section>
+                <section>
+                  <a href={discoverUrl} className="button primary">
+                    <span className={'icon icon-search'}></span>
+                  </a>
+                  <button onClick={navigateToRandomProduct} className="bg-white filled button">
+                    <span className="icon icon-button"></span>
+                  </button>
+                </section>
+              </Fragment>
+            )
           ) : (
-            <div className="hero-actions flex">
+            <div className="hero-actions flex items-center gap-4">
               {absoluteUrl ? (
-                <a className="logo w-64 mb-2 md:mb-0" href={discoverUrl}>
-                  <img className="my-auto h-full" alt="Logo" src={headerLogo} />
+                <a className="logo shrink-0 w-64" href={discoverUrl}>
+                  <img className="h-full" alt="Logo" src={headerLogo} />
                 </a>
               ) : (
-                <Link className="logo w-64 mb-2 md:mb-0" to="/">
-                  <img className="my-auto h-full" alt="Logo" src={headerLogo} />
+                <Link className="logo shrink-0 w-64" to="/">
+                  <img className="h-full" alt="Logo" src={headerLogo} />
                 </Link>
               )}
-              <ProductSearchBar />
-              <section>
+
+              <div className="flex flex-grow mt-4 sm:mt-0 gap-4 items-center">
+                <div className="flex-grow">
+                  <ProductSearchBar />
+                </div>
                 <button
                   onClick={navigateToRandomProduct}
-                  // disabled={newProductLoading}
-                  className="bg-white filled button button-primary underline"
+                  className="shrink-0 bg-white filled button button-primary underline flex items-center space-x-1"
                 >
                   <span className="icon icon-button"></span>
-                  <span className="hidden xl:block">i'm feeling lucky</span>
+                  <span className="hidden xl:inline">I'm feeling lucky</span>
                 </button>
-              </section>
-              {showNav && (
-                <Fragment>
-                  <HamburgerNav />
-                  <div className="separator" />
-                </Fragment>
-              )}
+                {showNav && (
+                  <div className="shrink-0 xl:hidden">
+                    <HamburgerNav />
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </>

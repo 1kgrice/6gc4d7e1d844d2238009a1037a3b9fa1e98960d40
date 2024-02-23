@@ -71,16 +71,29 @@ const TagFilter: React.FC<ITagFilter> = ({ tags, loading }) => {
           )}
         </fieldset>
       )}
-      {tags.length === 0 && (
+      {tags.length === 0 && !loading && (
         <fieldset role="group">
           <legend>Tags</legend>
-          {loading &&
-            [...Array(defaultVisibleLimit)].map((_, index) => (
-              <SkeletonContainer key={`tag-placeholder-${index}`}>
-                <Skeleton height={24} width={180} />
-              </SkeletonContainer>
-            ))}
-          {!loading && tags.length == 0 && <p>No tags found</p>}
+          {selectedTags.length > 0 ? (
+            selectedTags.map((tag, index) => (
+              <label key={`selected-tag-${tag}-${index}`}>
+                {`${tag} (0)`}
+                <input type="checkbox" checked={true} onChange={() => handleTagChange(tag)} />
+              </label>
+            ))
+          ) : (
+            <p>No tags found</p>
+          )}
+        </fieldset>
+      )}
+      {tags.length === 0 && loading && (
+        <fieldset role="group">
+          <legend>Tags</legend>
+          {[...Array(defaultVisibleLimit)].map((_, index) => (
+            <SkeletonContainer key={`tag-placeholder-${index}`}>
+              <Skeleton height={24} width={180} />
+            </SkeletonContainer>
+          ))}
         </fieldset>
       )}
     </div>

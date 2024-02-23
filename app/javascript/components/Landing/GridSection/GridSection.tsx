@@ -52,7 +52,6 @@ const GridSection = (props: PropsWithChildren<IGridSection>) => {
               className={props.imgProps?.className}
               style={props.imgProps?.style}
             />
-            {/* <div className="text-left pt-4 bottom-4 left-8">{props.imgProps?.description}</div> */}
           </div>
         </div>
       </div>

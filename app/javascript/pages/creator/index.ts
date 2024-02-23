@@ -1,4 +1,3 @@
-import CreatorPage from './CreatorPage'
-import ProductPage from './ProductPage'
+import CreatorProductPage from './CreatorProductPage'
 
-export { CreatorPage, ProductPage }
+export { CreatorProductPage }

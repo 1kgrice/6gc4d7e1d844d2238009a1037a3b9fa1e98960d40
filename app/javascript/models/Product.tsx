@@ -64,7 +64,7 @@ export default class Product implements IProduct {
     }
     this.price = Number(json?.price ?? 0)
     this.currency = json?.currency ?? ''
-    this.isPwyw = Boolean(json?.is_pwyw ?? false)
+    this.isPwyw = Boolean(json?.is_pay_what_you_want ?? false)
     this.pwywSuggestedPrice = Number(json?.pwyw_suggested_price_cents ?? 0)
     this.url = json?.url ?? ''
     this.carouselItems = json?.carousel_items?.map(String) ?? []

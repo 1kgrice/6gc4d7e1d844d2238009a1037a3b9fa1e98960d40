@@ -28,6 +28,7 @@ import SkeletonContainer from './Utility/SkeletonContainer/SkeletonContainer'
 import PopupWindow from './Utility/PopupWindow/PopupWindow'
 import RatingSection from './Product/RatingSection/RatingSection'
 import ProductOptionsSection from './Product/ProductOptionsSeciton/ProductOptionsSection'
+import ProductRating from './Product/ProductRating/ProductRating'
 
 export {
   Card,
@@ -59,5 +60,6 @@ export {
   PopupWindow,
   RatingSection,
   SkeletonContainer,
-  ProductOptionsSection
+  ProductOptionsSection,
+  ProductRating
 }

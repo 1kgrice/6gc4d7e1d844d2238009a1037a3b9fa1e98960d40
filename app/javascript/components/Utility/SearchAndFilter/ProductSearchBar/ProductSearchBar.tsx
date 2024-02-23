@@ -129,7 +129,7 @@ const ProductSearchBar = React.memo(({ queryMode = false }: IProductSearchBarPro
   }
 
   return (
-    <div className="combobox" style={{ flexGrow: 1 }}>
+    <div className="combobox" style={{ flexGrow: 1, minWidth: 0 }}>
       <div className="input">
         <span className="icon icon-solid-search"></span>
         <input
@@ -142,6 +142,7 @@ const ProductSearchBar = React.memo(({ queryMode = false }: IProductSearchBarPro
           value={searchQuery}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
+          style={{ minWidth: 0 }}
         />
         {searchQuery && searchQuery.length > 0 && (
           <span

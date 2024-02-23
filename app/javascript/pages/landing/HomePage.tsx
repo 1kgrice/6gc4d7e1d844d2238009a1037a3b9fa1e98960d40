@@ -10,8 +10,8 @@ export default function HomePage() {
       introMessage: (
         <Fragment>
           This little website was built as a Product Engineering challenge to get familiar with the
-          Gumroad platform. It's a replica of the Discover module with a few minor differences. All
-          products listed here are real. Have a look around.
+          Gumroad platform and its creators. It's a replica of the Discover module with a few minor
+          differences. All items listed here are real Gumroad products. Have a look around.
         </Fragment>
       ),
       button: {

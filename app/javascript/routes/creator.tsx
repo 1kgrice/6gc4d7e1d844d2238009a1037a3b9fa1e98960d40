@@ -1,6 +1,6 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { CreatorPage, ProductPage } from '~/pages/creator'
+import { CreatorProductPage } from '~/pages/creator'
 import { NotFoundPage } from '~/pages/common'
 
 export const routes = {
@@ -11,8 +11,8 @@ export const routes = {
 const CreatorRoutes = (
   <Router>
     <Routes>
-      <Route path="/" element={<CreatorPage />} />
-      <Route path="/l/:permalink" element={<ProductPage />} />
+      <Route path="/" element={<CreatorProductPage />} />
+      <Route path="/l/:permalink" element={<CreatorProductPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   </Router>

@@ -12,7 +12,6 @@ export const useViewportIsAbove = (value: 'sm' | 'md' | 'lg' | 'xl' | '2xl') => 
       setIsAbove(window.innerWidth > breakpoint);
     };
 
-    // Optimize performance by only adding the event listener once
     window.addEventListener('resize', handleResize);
     // Immediately check if the viewport matches the condition on mount
     handleResize();
