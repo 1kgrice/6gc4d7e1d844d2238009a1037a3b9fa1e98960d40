@@ -1,12 +1,14 @@
 import _API from '~/network/network'
 
-const appEnv = process.env.APP_ENV
-const apiHost = process.env.API_HOST
-const apiVersion = process.env.API_VERSION
+const appEnv = `${process.env.APP_ENV}`
+const apiHost = `${process.env.API_HOST}`
+const apiVersion = `${process.env.API_VERSION}`
 
 export const apiBase = () => {
-  const protocol = appEnv === 'production' ? 'https' : 'http'
-  return `${protocol}://${apiHost}/api/${apiVersion}`
+  const protocol = appEnv === 'production' ? 'https:' : 'http:'
+  const protocolRegex = /^(http:\/\/|https:\/\/)/
+  const sanitizedApiHost = apiHost.replace(protocolRegex, '')
+  return `${protocol}//${sanitizedApiHost}/api/${apiVersion}`
 }
 
 export const getCategories = (params = {}) => {
