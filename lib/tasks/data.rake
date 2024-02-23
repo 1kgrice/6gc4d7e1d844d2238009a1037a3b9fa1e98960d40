@@ -383,13 +383,14 @@ namespace :data do
       Product.import products_to_import, on_duplicate_key_ignore: true
 
       # Counting category stats
-      Category.all do |category|
+      Category.find_each do |category|
         products = Product.by_category(category.long_slug).published
         product_count = products.count
         creator_count = products.featured.count
         sales_count = products.map(&:sales_count).sum
         
-        CategoryStat.create(category_id: category.id, creator_count: creator_count, product_count: product_count, sales_count: sales_count)
+        stats = category.stats || CategoryStat.create(category: category)
+        stats.update(creator_count: creator_count, product_count: product_count, sales_count: sales_count)
       end
 
       # Mapping temp_id to actual ID for dependent entities
