@@ -9,14 +9,14 @@ pre_warm_products_job:
 
 pre_warm_categories_job:
   name: 'Pre-warm Discover Categories - every 1h'
-  cron: '0 * * * *'
+  cron: '15 * * * *'
   class: 'PreWarmDiscoverCategoriesJob'
   queue: 'default'
   description: 'This job pre-warms category caches.'
 
 pre_warm_tags_job:
   name: 'Pre-warm Discover Tags - every 1h'
-  cron: '0 * * * *'
+  cron: '30 * * * *'
   class: 'PreWarmDiscoverTagsJob'
   queue: 'default'
   description: 'This job pre-warms tags caches.'

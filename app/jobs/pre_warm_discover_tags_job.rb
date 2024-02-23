@@ -2,7 +2,7 @@ class PreWarmDiscoverTagsJob < ApplicationJob
   queue_as :default
 
   def perform
-    categories = Category.all
+    categories = Category.root
     queries = []
 
     queries = [{}]

@@ -2,7 +2,7 @@ class PreWarmDiscoverProductsJob < ApplicationJob
   queue_as :default
 
   def perform
-    categories = Category.all
+    categories = Category.root
     queries = []
 
     queries << { best_selling: true, limit: 3 }
@@ -33,19 +33,10 @@ class PreWarmDiscoverProductsJob < ApplicationJob
     queries += categories.map do |category|  
       {
         pwyw: true,
+        sort: 'most_reviewed',
         category: category.long_slug,
         limit: 3
       }
-    end
-    ['default', 'highest_rated', 'most_reviewed', 'price_asc', 'price_desc', 'newest', 'hot_and_new'].each do |sort|
-      queries << { sort: sort, from: 0 }
-      queries += categories.map do |category|
-        {
-          category: category.long_slug,
-          sort: sort,
-          from: 0
-        }
-      end
     end
 
     queries.each do |query|
