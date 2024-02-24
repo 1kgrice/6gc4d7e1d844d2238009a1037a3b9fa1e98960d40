@@ -57,6 +57,54 @@ Visit <http://localhost:3000> to access the local app.
 
 For cleanup, run ```docker-compose down -v```
 
+## Additional setup
+
+This app uses wildcard subdomains for creator pages. They aren't always resolved by default on localhost.
+This issue is known to be present on Safari on MacOS. If you run into it, you'll need to install an tool to resolve subdomains.
+Here's an example using dnsmasq ([credit](https://gist.github.com/ogrrd/5831371)):
+
+- Install
+
+```bash
+brew install dnsmasq
+```
+
+- Create config directory
+
+```bash
+mkdir -pv $(brew --prefix)/etc/
+```
+
+- Setup *.localhost
+
+```bash
+echo 'address=/.localhost/127.0.0.1' >> $(brew --prefix)/etc/dnsmasq.conf
+```
+
+- Change port (for older OS)
+
+```bash
+echo 'port=53' >> $(brew --prefix)/etc/dnsmasq.conf
+```
+
+- Autostart - now and after reboot
+
+```bash
+sudo brew services start dnsmasq
+```
+
+- Create resolver directory
+
+```bash
+sudo mkdir -v /etc/resolver
+```
+
+- Add your nameserver to resolvers
+
+```bash
+sudo bash -c 'echo "nameserver 127.0.0.1" > /etc/resolver/localhost'
+```
+
 ## Test
 
 This project utilizes RSpec for API testing. To run the tests:
@@ -65,7 +113,7 @@ This project utilizes RSpec for API testing. To run the tests:
 docker-compose run --rm test
 ```
 
-## Without Docker
+## Install without Docker
 
 If you prefer to run the project without Docker:
 
