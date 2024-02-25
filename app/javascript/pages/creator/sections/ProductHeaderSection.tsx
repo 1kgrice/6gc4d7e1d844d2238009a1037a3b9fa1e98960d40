@@ -3,6 +3,7 @@ import { Product } from '~/models'
 import { formatPrice } from '~/utils/currencyHelper'
 import { ProductRating } from '~/components'
 import clsx from 'clsx'
+import { getButtonText } from '~/utils/productHelper'
 
 interface ProductHeaderSectionProps {
   product?: Product
@@ -96,7 +97,7 @@ const ProductHeaderSection: React.FC<ProductHeaderSectionProps> = ({
           href={product.url}
           style={{ alignItems: 'unset' }}
         >
-          Add to cart
+          {getButtonText(product)}
         </a>
       </div>
     </section>

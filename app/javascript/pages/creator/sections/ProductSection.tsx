@@ -12,6 +12,7 @@ import { Product } from '~/models'
 import { Img } from 'react-image'
 import Skeleton from 'react-loading-skeleton'
 import { formatPrice } from '~/utils/currencyHelper'
+import { getButtonText } from '~/utils/productHelper'
 
 interface ProductSectionProps {
   product?: Product
@@ -30,21 +31,6 @@ const ProductSection: React.FC<ProductSectionProps> = ({ product, cartButtonCall
     () => formatPrice(product?.price || 0, product?.currency || 'USD', false),
     [product]
   )
-
-  const getButtonText = (product: Product | undefined) => {
-    if (!product) return 'Add to cart'
-    const optionMap: { [key: string]: string } = {
-      i_want_this_prompt: 'I want this!',
-      buy_this_prompt: 'Buy this',
-      pay_prompt: 'Pay'
-    }
-
-    return (
-      product.customViewContentButtonText ||
-      optionMap[product.customButtonTextOption] ||
-      'Add to cart'
-    )
-  }
 
   if (!product) {
     return (
