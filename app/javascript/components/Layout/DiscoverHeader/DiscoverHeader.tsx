@@ -37,6 +37,7 @@ const DiscoverHeader = ({
 
   const [randomProduct, setRandomProduct] = useState<Product | null>(null)
   const [_, setLoadingRandomProduct] = useState<boolean>(false)
+  const [navigationInitiated, setNavigationInitiated] = useState<boolean>(false)
 
   useEffect(() => {
     new Image().src = gumtectiveWhite
@@ -120,6 +121,7 @@ const DiscoverHeader = ({
   }, [params])
 
   const navigateToRandomProduct = async () => {
+    setNavigationInitiated(true)
     if (randomProduct) {
       navigationCallback()
       window.location.href = adjustProductUrlBasedOnCurrentPageContext(randomProduct.url)
@@ -169,7 +171,11 @@ const DiscoverHeader = ({
                   <a href={discoverUrl} className="button primary">
                     <span className={'icon icon-search'}></span>
                   </a>
-                  <button onClick={navigateToRandomProduct} className="bg-white filled button">
+                  <button
+                    onClick={navigateToRandomProduct}
+                    disabled={navigationInitiated}
+                    className="bg-white filled button"
+                  >
                     <span className="icon icon-button"></span>
                   </button>
                 </section>
@@ -193,6 +199,7 @@ const DiscoverHeader = ({
                 </div>
                 <button
                   onClick={navigateToRandomProduct}
+                  disabled={navigationInitiated}
                   className="shrink-0 bg-white filled button button-primary underline flex items-center space-x-1"
                 >
                   <span className="icon icon-button"></span>
