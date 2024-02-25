@@ -200,7 +200,8 @@ export default function DiscoverPage() {
   }
 
   const fetchMoreDiscoverProducts = async () => {
-    if (discoverProducts.length < 9 && discoverableTotal > 9) {
+    if (discoverProducts.length >= discoverableTotal) return
+    if (discoverableTotal > 9) {
       const longSlug = location.pathname.replace(/^\//, '')
       const queryParams = new URLSearchParams(location.search)
       const filterQuery = constructFilterQuery(queryParams, longSlug, discoverProducts.length)
