@@ -32,14 +32,14 @@ const ProductHeaderSection: React.FC<ProductHeaderSectionProps> = ({
       }
     )
 
-    const target = document.querySelector('#product-title')
+    const target = document.getElementById('product-title')
     if (target) {
       observer.observe(target)
     }
 
     return () => {
       if (target) {
-        observer.unobserve(target)
+        observer.disconnect()
       }
     }
   }, [])
@@ -53,25 +53,20 @@ const ProductHeaderSection: React.FC<ProductHeaderSectionProps> = ({
         overflow: 'hidden',
         padding: 0,
         border: 'medium',
-        height: 82,
-        transition: 'var(--transition-duration)',
+        height: '82px',
         flexShrink: 0,
         order: -1,
         position: 'sticky',
         top: 0,
         zIndex: 'var(--z-index-menubar)',
-        boxShadow: `0 var(--border-width) rgb(var(--color)), 0 calc(-1 * var(--border-width)) rgb(var(--color))`
+        boxShadow:
+          '0 var(--border-width) rgb(var(--color)), 0 calc(-1 * var(--border-width)) rgb(var(--color))',
+        opacity: isVisible ? '1' : '0',
+        transition: 'opacity 0.5s ease-in-out'
       }}
-      className={clsx(
-        'hidden md:block',
-        'transition-opacity duration-200',
-        { 'opacity-100': isVisible },
-        { 'opacity-0': !isVisible },
-        { invisible: !isVisible },
-        { visible: isVisible }
-      )}
+      className="hidden md:block"
     >
-      <div className="product-cta" style={{ transition: 'var(--transition-duration)' }}>
+      <div className="product-cta" style={{ transition: 'opacity 0.5s ease-in-out' }}>
         <div className="has-tooltip right" aria-describedby="product-price">
           <div className="price" itemProp="price" content={product.price.toString()}>
             {formattedPrice}

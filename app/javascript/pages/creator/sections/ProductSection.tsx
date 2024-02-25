@@ -53,124 +53,121 @@ const ProductSection: React.FC<ProductSectionProps> = ({ product, cartButtonCall
   }
 
   return (
-    <div>
-      {/* Main Product */}
-      <section style={{ position: 'relative' }}>
-        <article className="product">
-          <Carousel items={product.carouselItems} />
-          <section>
-            <header>
-              <h1 itemProp="name" id="product-title">
-                {product.name}
-              </h1>
-            </header>
-            <section className="details">
-              {product.options.length == 0 && (
-                <div
-                  itemScope
-                  itemProp="offers"
-                  itemType="https://schema.org/Offer"
-                  style={{ display: 'flex', alignItems: 'center' }}
-                >
-                  <div className="has-tooltip right" aria-describedby="product-price">
-                    <div className="price" itemProp="price" content={product.price.toString()}>
-                      {formattedPrice}
-                    </div>
-                    <div role="tooltip" id="product-price">
-                      {formattedPrice}
-                    </div>
-                  </div>
-
-                  <link itemProp="url" href={product.url} />
-                  <div itemProp="availability" hidden>
-                    https://schema.org/InStock
-                  </div>
-                  <div itemProp="priceCurrency" hidden>
-                    {product.currency.toUpperCase()}
-                  </div>
-                </div>
-              )}
-              <div className="flex items-center" style={{ gap: 'var(--spacer-2)' }}>
-                <Link to="/" className="user relative" rel="noreferrer">
-                  <Img
-                    className="user-avatar"
-                    src={[product.creator.avatarUrl, gCircleAltPink]}
-                    alt={product.creator.name}
-                  />
-                  {product.creator.name}
-                </Link>
-              </div>
-              <ProductRating product={product} />
-            </section>
-            <section>
-              <div className="rich-text">
-                <div
-                  className="tiptap ProseMirror"
-                  contentEditable="false"
-                  translate="no"
-                  dangerouslySetInnerHTML={{ __html: product.descriptionHTML }}
-                ></div>
-              </div>
-            </section>
-          </section>
-          <section>
-            <section>
-              {product.options.length > 0 && (
-                <section>
-                  <ProductOptionsSection product={product} />
-                </section>
-              )}
-              {product.isPwyw && (
-                <fieldset>
-                  <Fragment>
-                    <legend>
-                      <label>Name a fair price:</label>
-                    </legend>
-                    <div className="input">
-                      <div className="pill">$</div>
-                      <input
-                        type="text"
-                        maxLength={10}
-                        placeholder={`${formatPrice(
-                          product.pwywSuggestedPrice,
-                          product.currency,
-                          true
-                        )}+`}
-                        autoComplete="off"
-                        aria-invalid="false"
-                        value={productValue}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </Fragment>
-                </fieldset>
-              )}
-              <a
-                className="accent button"
-                target="_top"
-                href="https://gumroad.com/l/9bJZ"
-                onClick={cartButtonCallback}
-                style={{ alignItems: 'unset' }}
+    <section style={{ position: 'relative' }}>
+      <article className="product">
+        <Carousel items={product.carouselItems} />
+        <section>
+          <header>
+            <h1 itemProp="name" id="product-title">
+              {product.name}
+            </h1>
+          </header>
+          <section className="details">
+            {product.options.length == 0 && (
+              <div
+                itemScope
+                itemProp="offers"
+                itemType="https://schema.org/Offer"
+                style={{ display: 'flex', alignItems: 'center' }}
               >
-                {getButtonText(product)}
-              </a>
-              {product.pAttributes.length > 0 && (
-                <div className="stack">
-                  {product.summary && <p>{product.summary}</p>}
-                  {product.pAttributes.map((attribute, index) => (
-                    <div key={index}>
-                      <h5>{attribute.name}</h5>
-                      <div>{attribute.value}</div>
-                    </div>
-                  ))}
+                <div className="has-tooltip right" aria-describedby="product-price">
+                  <div className="price" itemProp="price" content={product.price.toString()}>
+                    {formattedPrice}
+                  </div>
+                  <div role="tooltip" id="product-price">
+                    {formattedPrice}
+                  </div>
                 </div>
-              )}
-            </section>
-            <RatingSection product={product} />
+
+                <link itemProp="url" href={product.url} />
+                <div itemProp="availability" hidden>
+                  https://schema.org/InStock
+                </div>
+                <div itemProp="priceCurrency" hidden>
+                  {product.currency.toUpperCase()}
+                </div>
+              </div>
+            )}
+            <div className="flex items-center" style={{ gap: 'var(--spacer-2)' }}>
+              <Link to="/" className="user relative" rel="noreferrer">
+                <Img
+                  className="user-avatar"
+                  src={[product.creator.avatarUrl, gCircleAltPink]}
+                  alt={product.creator.name}
+                />
+                {product.creator.name}
+              </Link>
+            </div>
+            <ProductRating product={product} />
           </section>
-        </article>
-      </section>
-    </div>
+          <section>
+            <div className="rich-text">
+              <div
+                className="tiptap ProseMirror"
+                contentEditable="false"
+                translate="no"
+                dangerouslySetInnerHTML={{ __html: product.descriptionHTML }}
+              ></div>
+            </div>
+          </section>
+        </section>
+        <section>
+          <section>
+            {product.options.length > 0 && (
+              <section>
+                <ProductOptionsSection product={product} />
+              </section>
+            )}
+            {product.isPwyw && (
+              <fieldset>
+                <Fragment>
+                  <legend>
+                    <label>Name a fair price:</label>
+                  </legend>
+                  <div className="input">
+                    <div className="pill">$</div>
+                    <input
+                      type="text"
+                      maxLength={10}
+                      placeholder={`${formatPrice(
+                        product.pwywSuggestedPrice,
+                        product.currency,
+                        true
+                      )}+`}
+                      autoComplete="off"
+                      aria-invalid="false"
+                      value={productValue}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </Fragment>
+              </fieldset>
+            )}
+            <a
+              className="accent button"
+              target="_top"
+              href="https://gumroad.com/l/9bJZ"
+              onClick={cartButtonCallback}
+              style={{ alignItems: 'unset' }}
+            >
+              {getButtonText(product)}
+            </a>
+            {product.pAttributes.length > 0 && (
+              <div className="stack">
+                {product.summary && <p>{product.summary}</p>}
+                {product.pAttributes.map((attribute, index) => (
+                  <div key={index}>
+                    <h5>{attribute.name}</h5>
+                    <div>{attribute.value}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+          <RatingSection product={product} />
+        </section>
+      </article>
+    </section>
   )
 }
 

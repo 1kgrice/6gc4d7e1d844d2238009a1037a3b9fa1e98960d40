@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useCallback } from 'react'
+import React, { useState, useEffect, Fragment, useCallback, useRef } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { DiscoverHeader, SkeletonContainer, PopupWindow } from '~/components'
@@ -23,6 +23,7 @@ const CreatorProductPage = () => {
   const location = useLocation()
   const hostname = window.location.hostname
   const username = hostname.split('.')[0]
+  const loadMoreRef = useRef(null)
 
   const loading = !creator
   const [loadingCreatorProducts, setLoadingCreatorProducts] = useState<boolean>(false)
@@ -86,19 +87,31 @@ const CreatorProductPage = () => {
     }
   }
 
-  const handleScroll = useCallback(async () => {
-    const bottom =
-      Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight
-    console.log('scroll')
-    if (bottom && !loadingCreatorProducts) {
-      fetchMoreProducts()
-    }
-  }, [loadingCreatorProducts])
-
   useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [handleScroll])
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        if (entry.isIntersecting) {
+          fetchMoreProducts()
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.0
+      }
+    )
+
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current)
+    }
+
+    return () => {
+      if (loadMoreRef.current) {
+        observer.unobserve(loadMoreRef.current)
+      }
+    }
+  }, [products])
 
   const fetchCreator = async () => {
     try {
@@ -154,23 +167,10 @@ const CreatorProductPage = () => {
         <title>{product ? `${product.name} by ${creator?.name}` : creator?.name}</title>
         {creator && <link rel="icon" type="image/png" href={creator.avatarUrl} />}
       </Helmet>
-      {creator && (
-        <DiscoverHeader
-          showNav={false}
-          creatorMode
-          creator={creator}
-          navigationCallback={() => {
-            // setCreator(undefined)
-            // setProduct(undefined)
-          }}
-        />
-      )}
+      {creator && <DiscoverHeader showNav={false} creatorMode creator={creator} />}
       <main>
         {permalink && product && (
           <Fragment>
-            {product && (
-              <ProductHeaderSection product={product} cartButtonCallback={processCartButtonClick} />
-            )}
             <PopupWindow
               isOpen={isPopupOpen}
               onClose={() => setIsPopupOpen(false)}
@@ -201,9 +201,18 @@ const CreatorProductPage = () => {
         ) : permalink ? (
           <ProductSection product={product} cartButtonCallback={processCartButtonClick} />
         ) : (
-          <ProductGridSection products={products} loadingCreatorProducts={loadingCreatorProducts} />
+          <>
+            <ProductGridSection
+              products={products}
+              loadingCreatorProducts={loadingCreatorProducts}
+            />
+          </>
+        )}
+        {product && (
+          <ProductHeaderSection product={product} cartButtonCallback={processCartButtonClick} />
         )}
         <footer className="flex !justify-center items-center h-20">
+          <div className="h-1" ref={loadMoreRef}></div>
           <a href={routes.homeAbsolute} className="flex items-center">
             <Img src={gumtectiveBlack} style={{ width: 120 }} />
           </a>
