@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useMemo } from 'react'
+import React, { useState, useEffect, Fragment, useCallback } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { DiscoverHeader, SkeletonContainer, PopupWindow } from '~/components'
@@ -33,51 +33,84 @@ const CreatorProductPage = () => {
   }, [])
 
   useEffect(() => {
-    if (products.length == 0) {
-      fetchCreatorData()
+    if (!creator) {
+      fetchCreator()
     }
-  }, [permalink])
+    if (permalink) {
+      fetchProduct()
+    }
+  }, [location, permalink])
 
-  const fetchCreatorData = async () => {
+  useEffect(() => {
+    if (creator && !permalink && products.length === 0) {
+      setProduct(undefined)
+      fetchProductData(
+        api.getProductsFromSearch,
+        { creator: creator.username, from: products.length },
+        setProducts,
+        setLoadingCreatorProducts
+      )
+    }
+  }, [creator, permalink])
+
+  const fetchProductData = async (apiMethod, queryParams, setState, setLoading) => {
+    setLoading(true)
+    try {
+      const response = await apiMethod(queryParams)
+      const products = response.products.map((product) => new Product(product))
+      setState(products)
+      setLoading(false)
+    } catch (error) {
+      console.error(`Error fetching products:`, error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const fetchMoreProducts = async () => {
+    if (creator && !permalink) {
+      fetchProductData(
+        api.getProductsFromSearch,
+        {
+          creator: creator.username,
+          from: products.length
+        },
+        (newProducts) => {
+          setProducts((prevProducts) => {
+            let products = [...prevProducts, ...newProducts]
+            return products
+          })
+        },
+        setLoadingCreatorProducts
+      )
+    }
+  }
+
+  const handleScroll = useCallback(async () => {
+    const bottom =
+      Math.ceil(window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight
+    console.log('scroll')
+    if (bottom && !loadingCreatorProducts) {
+      fetchMoreProducts()
+    }
+  }, [loadingCreatorProducts])
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [handleScroll])
+
+  const fetchCreator = async () => {
     try {
       if (!creator) {
         const { creator: fetchedCreator } = await api.getCreator({ username })
         setCreator(new Creator(fetchedCreator))
-      }
-      if (!permalink && products.length == 0) {
-        setLoadingCreatorProducts(true)
-        const response = await api.getProductsFromSearch({ creator: username })
-        const products = response.products.map((product) => new Product(product))
-        setLoadingCreatorProducts(false)
-        setProducts(products)
       }
     } catch (error) {
       setError(true)
       console.error(`Error fetching creator:`, error)
     }
   }
-
-  const fetchCreatorProductsData = async () => {
-    try {
-      if (products.length == 0) {
-        setLoadingCreatorProducts(true)
-        const response = await api.getProductsFromSearch({ creator: username })
-        const products = response.products.map((product) => new Product(product))
-        setProducts(products)
-      }
-    } catch (error) {
-      setError(true)
-      console.error(`Error fetching creator products:`, error)
-    } finally {
-      setLoadingCreatorProducts(false)
-    }
-  }
-
-  useEffect(() => {
-    if (creator && !permalink) {
-      fetchCreatorProductsData()
-    }
-  }, [creator, permalink])
 
   const fetchProduct = async () => {
     if (!permalink) return
@@ -95,13 +128,6 @@ const CreatorProductPage = () => {
       setLoadingProduct(false)
     }
   }
-
-  useEffect(() => {
-    fetchCreatorData()
-    if (permalink) {
-      fetchProduct()
-    }
-  }, [location, permalink])
 
   if (error) {
     return <NotFoundPage />
@@ -128,18 +154,23 @@ const CreatorProductPage = () => {
         <title>{product ? `${product.name} by ${creator?.name}` : creator?.name}</title>
         {creator && <link rel="icon" type="image/png" href={creator.avatarUrl} />}
       </Helmet>
-      <DiscoverHeader
-        showNav={false}
-        creatorMode
-        creator={creator}
-        navigationCallback={() => {
-          setCreator(undefined)
-        }}
-      />
+      {creator && (
+        <DiscoverHeader
+          showNav={false}
+          creatorMode
+          creator={creator}
+          navigationCallback={() => {
+            // setCreator(undefined)
+            // setProduct(undefined)
+          }}
+        />
+      )}
       <main>
         {permalink && product && (
           <Fragment>
-            <ProductHeaderSection product={product} cartButtonCallback={processCartButtonClick} />
+            {product && (
+              <ProductHeaderSection product={product} cartButtonCallback={processCartButtonClick} />
+            )}
             <PopupWindow
               isOpen={isPopupOpen}
               onClose={() => setIsPopupOpen(false)}
