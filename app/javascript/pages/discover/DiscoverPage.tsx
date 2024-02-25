@@ -201,29 +201,28 @@ export default function DiscoverPage() {
 
   const fetchMoreDiscoverProducts = async () => {
     if (discoverProducts.length < 9 && discoverableTotal > 9) {
-      return
+      const longSlug = location.pathname.replace(/^\//, '')
+      const queryParams = new URLSearchParams(location.search)
+      const filterQuery = constructFilterQuery(queryParams, longSlug, discoverProducts.length)
+
+      let newQuery = { ...filterQuery }
+      let prevQuery = { ...searchQuery }
+      delete prevQuery['from']
+      delete newQuery['from']
+
+      fetchProductData(
+        api.getProductsFromSearch,
+        filterQuery,
+        (newProducts) => {
+          setDiscoverProducts((prevProducts) => {
+            let products = [...prevProducts, ...newProducts]
+            return products
+          })
+        },
+        setLoadingDiscoverProducts,
+        { clearTags: objectsDiffer(newQuery, prevQuery), saveQuery: true }
+      )
     }
-    const longSlug = location.pathname.replace(/^\//, '')
-    const queryParams = new URLSearchParams(location.search)
-    const filterQuery = constructFilterQuery(queryParams, longSlug, discoverProducts.length)
-
-    let newQuery = { ...filterQuery }
-    let prevQuery = { ...searchQuery }
-    delete prevQuery['from']
-    delete newQuery['from']
-
-    fetchProductData(
-      api.getProductsFromSearch,
-      filterQuery,
-      (newProducts) => {
-        setDiscoverProducts((prevProducts) => {
-          let products = [...prevProducts, ...newProducts]
-          return products
-        })
-      },
-      setLoadingDiscoverProducts,
-      { clearTags: objectsDiffer(newQuery, prevQuery), saveQuery: true }
-    )
   }
 
   const fetchProductData = async (
