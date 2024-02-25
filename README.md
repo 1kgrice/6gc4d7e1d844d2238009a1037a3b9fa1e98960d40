@@ -1,6 +1,6 @@
 # [gumtective.com](https://gumtective.com)
 
-![Example Image](app/assets/images/android-chrome-192x192.png)
+![Example Image](app/javascript/assets/images/detective-quack-bg.png)
 
 This application is developed using Ruby on Rails and React, leveraging ESBuild for compilation and PostCSS (with TailwindCSS) for styling. The frontend is structured around multiple React entry points for different modules (landing, discover, creator). Redis is employed for caching in production. Background processes are managed with Sidekiq. To ensure a smooth user experience, cache pre-warming jobs are scheduled for frequently used requests.
 
@@ -60,7 +60,7 @@ For cleanup, run ```docker-compose down -v```
 ## Additional setup
 
 This app uses wildcard subdomains for creator pages. They aren't always resolved by default on localhost.
-This issue is known to be present on Safari on MacOS. If you run into it, you'll need to install an tool to resolve subdomains.
+This issue is known to be present on Safari on MacOS. If you run into it, you'll need to install a tool to resolve subdomains.
 Here's an example using dnsmasq ([credit](https://gist.github.com/ogrrd/5831371)):
 
 - Install
