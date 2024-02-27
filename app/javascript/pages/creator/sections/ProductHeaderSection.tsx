@@ -62,11 +62,11 @@ const ProductHeaderSection: React.FC<ProductHeaderSectionProps> = ({
         boxShadow:
           '0 var(--border-width) rgb(var(--color)), 0 calc(-1 * var(--border-width)) rgb(var(--color))',
         opacity: isVisible ? '1' : '0',
-        transition: 'opacity 0.5s ease-in-out'
+        transition: 'opacity 0.25s ease-in-out'
       }}
       className="hidden md:block"
     >
-      <div className="product-cta" style={{ transition: 'opacity 0.5s ease-in-out' }}>
+      <div className="product-cta" style={{ transition: 'opacity 0.25s ease-in-out' }}>
         <div className="has-tooltip right" aria-describedby="product-price">
           <div className="price" itemProp="price" content={product.price.toString()}>
             {formattedPrice}
