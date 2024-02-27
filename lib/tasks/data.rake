@@ -163,6 +163,28 @@ namespace :data do
         end
       end
     end
+
+    desc 'Create ProductRecurrence records from ProductReference recurrences'
+    task migrate_recurrences: :environment do
+      ProductReference.where.not(recurrences: [nil, '']).find_each do |product_reference|
+        recurrence_data = JSON.parse(product_reference.recurrences)
+        
+        next unless recurrence_data['enabled']&.any?
+        
+        recurrence_data['enabled'].each do |recurrence|
+          ProductRecurrence.create!(
+            product_id: product_reference.product_id,
+            recurrence: recurrence['recurrence'],
+            price_cents: recurrence['price_cents']
+          )
+        end
+  
+        product = Product.find_by(id: product_reference.product_id)
+        product.update(default_recurrence: recurrence_data[:default]) if product && recurrence_data[:default].present?
+      end
+  
+      puts "ProductRecurrence creation from ProductReference recurrences completed."
+    end
   end
 
   namespace :creators do
@@ -175,6 +197,13 @@ namespace :data do
         avatar_url = product.meta["seller"]["avatar_url"]
         creator.update(avatar_url: avatar_url)
         puts "Copied avatar_url '#{avatar_url}' to creator #{creator.id}"
+      end
+    end
+
+    desc "Queue jobs to fetch meta script for all creators"
+    task fetch_meta_data: :environment do
+      Creator.where.not(meta_script: nil).find_each(batch_size: 100) do |creator|
+        FetchCreatorMetaDataJob.perform_async(creator.id)
       end
     end
   end

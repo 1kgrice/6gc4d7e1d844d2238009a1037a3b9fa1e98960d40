@@ -9,6 +9,7 @@
   - critical
   - default
   - low
+  - [web_parsing, 1]
 
 production:
   :concurrency: 2
