@@ -202,7 +202,7 @@ namespace :data do
 
     desc "Queue jobs to fetch meta script for all creators"
     task fetch_meta_data: :environment do
-      Creator.where.not(meta_script: nil).find_each(batch_size: 100) do |creator|
+      Creator.where(meta_script: nil).find_each(batch_size: 100) do |creator|
         FetchCreatorMetaDataJob.perform_async(creator.id)
       end
     end
