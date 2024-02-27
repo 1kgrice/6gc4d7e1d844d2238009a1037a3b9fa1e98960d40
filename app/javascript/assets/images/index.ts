@@ -18,6 +18,7 @@ import gCircleAltPurple from './faces/gAlternativePurple.svg'
 import gCircleAltDarkYellow from './faces/gAlternativeDarkYellow.svg'
 import boardMeeting from './boardMeeting.webp'
 import envelope from './icons/envelope.svg'
+import github from './icons/github-mark.svg'
 
 import categoryOther from './stickers/category-other.svg'
 import categoryGaming from './stickers/category-gaming.svg'
