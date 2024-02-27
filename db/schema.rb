@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_02_22_074025) do
+ActiveRecord::Schema[7.1].define(version: 2024_02_27_200453) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
   enable_extension "plpgsql"
@@ -66,6 +66,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_074025) do
     t.datetime "remember_created_at"
     t.string "twitter"
     t.string "avatar_url"
+    t.text "meta_script"
     t.index ["email"], name: "index_creators_on_email", unique: true
     t.index ["reset_password_token"], name: "index_creators_on_reset_password_token", unique: true
     t.index ["username"], name: "index_creators_on_username", unique: true
@@ -117,6 +118,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_074025) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_product_options_on_product_id"
+  end
+
+  create_table "product_recurrences", force: :cascade do |t|
+    t.bigint "product_id", null: false
+    t.string "recurrence"
+    t.integer "price_cents", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id", "recurrence"], name: "index_product_recurrences_on_product_id_and_recurrence", unique: true, where: "((recurrence IS NOT NULL) AND ((recurrence)::text <> ''::text) AND (product_id IS NOT NULL))"
+    t.index ["product_id"], name: "index_product_recurrences_on_product_id"
   end
 
   create_table "product_references", force: :cascade do |t|
@@ -214,6 +225,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_074025) do
     t.boolean "is_weekly_showcase", default: false
     t.string "custom_view_content_button_text"
     t.string "custom_button_text_option"
+    t.string "default_recurrence"
     t.index ["category_slugs"], name: "index_products_on_category_slugs", using: :gin
     t.index ["created_at"], name: "index_products_on_created_at"
     t.index ["creator_id", "permalink"], name: "index_products_on_creator_id_and_permalink", unique: true, where: "((creator_id IS NOT NULL) AND (permalink IS NOT NULL))"
@@ -268,6 +280,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_02_22_074025) do
   add_foreign_key "category_stats", "categories"
   add_foreign_key "product_attributes", "products"
   add_foreign_key "product_options", "products"
+  add_foreign_key "product_recurrences", "products"
   add_foreign_key "product_references", "products"
   add_foreign_key "products", "creators"
   add_foreign_key "taggings", "tags"
