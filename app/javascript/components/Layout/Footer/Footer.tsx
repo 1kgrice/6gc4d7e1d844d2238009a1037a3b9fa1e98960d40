@@ -46,7 +46,7 @@ const Footer = (props: IFooter) => {
             <div></div>
             <div></div>
             <div></div>
-            <a
+            {/* <a
               href="https://github.com/1kgrice/6gc4d7e1d844d2238009a1037a3b9fa1e98960d40"
               className="social-link w-inline-block"
             >
@@ -62,7 +62,7 @@ const Footer = (props: IFooter) => {
                   fill="currentColor"
                 />
               </svg>
-            </a>
+            </a> */}
             <a href="mailto:ragozin@hey.com" className="social-link w-inline-block">
               <svg
                 width="36"
