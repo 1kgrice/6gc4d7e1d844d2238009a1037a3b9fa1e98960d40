@@ -150,3 +150,5 @@ gem "active_model_serializers", "~> 0.10.14"
 
 # Media embeddings
 gem "ruby-oembed", "~> 0.16.1"
+
+gem "ruby-limiter", "~> 2.3"
